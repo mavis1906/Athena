@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Athena</h1>
+            <p id="userGreeting"></p>
+        </div>
+    </header>
+
+    <nav>
+        <button class="navButton" data-section="overview">Overview</button>
+        <button class="navButton" data-section="role">My Role</button>
+        <button class="navButton" data-section="problems">Problems</button>
+        <button class="navButton" data-section="solved">Solved Problems</button>
+        <button class="navButton" data-section="settings">Settings</button>
+    </nav>
+
+    <main>
+        <section id="overview" class="appSection">
+            <h2>Overview</h2>
+            <p>Welcome to Athena.</p>
+
+            <div id="overviewProblems">
+                <p>Loading problems...</p>
+            </div>
+        </section>
+
+        <section id="role" class="appSection" hidden>
+            <h2>My Role</h2>
+            <p id="roleInformation"></p>
+
+            <div id="roleProblems">
+                <p>Loading role problems...</p>
+            </div>
+        </section>
+
+        <section id="problems" class="appSection" hidden>
+            <h2>Problems</h2>
+
+            <button id="createProblemButton" type="button">
+                Create Problem
+            </button>
+
+            <div id="problemFormContainer" hidden>
+                <h3>Post a Problem</h3>
+
+                <form id="problemForm">
+                    <input
+                        type="text"
+                        id="problemTitle"
+                        placeholder="Problem title"
+                        required
+                    >
+
+                    <textarea
+                        id="problemDescription"
+                        placeholder="Describe your problem"
+                        required
+                    ></textarea>
+
+                    <label for="problemImage1">Image 1</label>
+                    <input
+                        type="file"
+                        id="problemImage1"
+                        accept="image/*"
+                        required
+                    >
+
+                    <label for="problemImage2">Image 2</label>
+                    <input
+                        type="file"
+                        id="problemImage2"
+                        accept="image/*"
+                    >
+
+                    <label for="problemImage3">Image 3</label>
+                    <input
+                        type="file"
+                        id="problemImage3"
+                        accept="image/*"
+                    >
+
+                    <label for="problemImage4">Image 4</label>
+                    <input
+                        type="file"
+                        id="problemImage4"
+                        accept="image/*"
+                    >
+
+                    <button type="submit">Post Problem</button>
+
+                    <p id="problemMessage"></p>
+                </form>
+            </div>
+
+            <div id="problemsFeed">
+                <p>Loading problems...</p>
+            </div>
+        </section>
+
+        <section id="problemDetail" class="appSection" hidden>
+            <button id="backToProblemsButton" type="button">
+                Back to Problems
+            </button>
+
+            <div id="problemDetailContent">
+                <p>Loading problem...</p>
+            </div>
+        </section>
+
+        <section id="solved" class="appSection" hidden>
+            <h2>Solved Problems</h2>
+
+            <div id="solvedProblems">
+                <p>Loading solved problems...</p>
+            </div>
+        </section>
+
+        <section id="settings" class="appSection" hidden>
+            <h2>Settings</h2>
+            <button id="settingsLogoutButton">Logout</button>
+        </section>
+    </main>
+
+    <script src="assets/js/index.js"></script>
+</body>
+</html>

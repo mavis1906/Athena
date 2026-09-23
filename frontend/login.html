@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - Login</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body>
+    <main class="authPage">
+        <section class="authIntro">
+            <a href="index.html" class="brand">Athena</a>
+
+            <div class="introContent">
+                <p class="eyebrow">A COMMUNITY OF PROBLEM SOLVERS</p>
+                <h1>Ideas become solutions when people share what they know.</h1>
+                <p>
+                    Connect with people across different fields, discuss real problems,
+                    and contribute knowledge that can help others.
+                </p>
+            </div>
+        </section>
+
+        <section class="authPanel">
+            <div class="authCard">
+                <div class="authHeader">
+                    <p class="eyebrow">WELCOME BACK</p>
+                    <h2>Sign in to Athena</h2>
+                    <p>Continue where you left off.</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="primaryButton">
+                        Login
+                    </button>
+
+                    <p id="message"></p>
+                </form>
+
+                <p class="authSwitch">
+                    Don't have an account?
+                    <a href="signup.html">Create one</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/login.js"></script>
+</body>
+</html>

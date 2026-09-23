@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena - Sign Up</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body>
+    <main class="authPage">
+        <section class="authIntro">
+            <a href="index.html" class="brand">Athena</a>
+
+            <div class="introContent">
+                <p class="eyebrow">JOIN THE COMMUNITY</p>
+                <h1>Your experience could be the answer someone is looking for.</h1>
+                <p>
+                    Create your profile, choose your field, and start contributing
+                    to a community built around solving real problems.
+                </p>
+            </div>
+        </section>
+
+        <section class="authPanel">
+            <div class="authCard signupCard">
+                <div class="authHeader">
+                    <p class="eyebrow">GET STARTED</p>
+                    <h2>Create your account</h2>
+                    <p>Tell us a little about yourself.</p>
+                </div>
+
+                <form id="signupForm">
+                    <div class="field">
+                        <label for="fullName">Full name</label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            placeholder="Your full name"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="you@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Phone number <span>Optional</span></label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            placeholder="Your phone number"
+                        >
+                    </div>
+
+                    <div class="formRow">
+                        <div class="field">
+                            <label for="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Create a password"
+                                required
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="confirmPassword">Confirm password</label>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Repeat password"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="formRow">
+                        <div class="field">
+                            <label for="category">Field</label>
+                            <select id="category" required>
+                                <option value="">Select field</option>
+                                <option value="Software">Software</option>
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Healthcare">Healthcare</option>
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label for="role">Role</label>
+                            <select id="role" required>
+                                <option value="">Select role</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="primaryButton">
+                        Create Account
+                    </button>
+
+                    <p id="message"></p>
+                </form>
+
+                <p class="authSwitch">
+                    Already have an account?
+                    <a href="login.html">Sign in</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/signup.js"></script>
+</body>
+</html>

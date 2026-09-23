@@ -1,0 +1,269 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap");
+
+:root {
+    --ink: #18221d;
+    --muted: #69736d;
+    --paper: #f3f1ea;
+    --white: #ffffff;
+    --line: #d9dcd5;
+    --green: #49634f;
+    --green-dark: #304936;
+    --red: #b44d43;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+}
+
+.authPage {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.authIntro {
+    background: var(--ink);
+    color: var(--white);
+    padding: 44px max(6vw, 40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.brand {
+    color: var(--white);
+    text-decoration: none;
+    font-family: "Playfair Display", serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -1px;
+}
+
+.introContent {
+    max-width: 540px;
+    padding-bottom: 8vh;
+}
+
+.eyebrow {
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    margin-bottom: 16px;
+}
+
+.authIntro .eyebrow {
+    color: #91aa95;
+}
+
+.introContent h1 {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(38px, 4vw, 62px);
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    margin-bottom: 24px;
+}
+
+.introContent > p:last-child {
+    max-width: 480px;
+    color: #bfc8c0;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.authPanel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+}
+
+.authCard {
+    width: min(440px, 100%);
+}
+
+.signupCard {
+    width: min(540px, 100%);
+}
+
+.authHeader {
+    margin-bottom: 30px;
+}
+
+.authHeader h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    line-height: 1.15;
+    letter-spacing: -0.8px;
+    margin-bottom: 8px;
+}
+
+.authHeader > p:last-child {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.authCard form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field label {
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.field label span {
+    color: #929991;
+    font-weight: 400;
+    margin-left: 4px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: var(--white);
+    color: var(--ink);
+    padding: 0 14px;
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.field select {
+    cursor: pointer;
+}
+
+.field input::placeholder {
+    color: #a0a6a1;
+}
+
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: var(--green);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.primaryButton {
+    width: 100%;
+    height: 48px;
+    border: 1px solid var(--green-dark);
+    border-radius: 2px;
+    background: var(--green-dark);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.primaryButton:hover {
+    background: var(--green);
+    border-color: var(--green);
+}
+
+#message {
+    min-height: 20px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.authSwitch {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.authSwitch a {
+    color: var(--green-dark);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.authSwitch a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 850px) {
+    .authPage {
+        grid-template-columns: 1fr;
+    }
+
+    .authIntro {
+        min-height: 340px;
+        padding: 30px 24px;
+    }
+
+    .introContent {
+        padding-bottom: 0;
+        margin-top: 70px;
+    }
+
+    .introContent h1 {
+        font-size: 40px;
+    }
+
+    .authPanel {
+        padding: 42px 24px 60px;
+    }
+}
+
+@media (max-width: 520px) {
+    .authIntro {
+        min-height: 300px;
+    }
+
+    .brand {
+        font-size: 32px;
+    }
+
+    .introContent {
+        margin-top: 45px;
+    }
+
+    .introContent h1 {
+        font-size: 34px;
+    }
+
+    .authPanel {
+        padding: 34px 20px 50px;
+    }
+
+    .authHeader h2 {
+        font-size: 31px;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+    }
+}
