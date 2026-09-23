@@ -1,5 +1,9 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+
+os.makedirs("database", exist_ok=True)
 
 DATABASE_URL = "sqlite:///./database/athena.db"
 
