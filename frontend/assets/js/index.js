@@ -9,7 +9,7 @@ if (!userData || !token) {
 
 const user = JSON.parse(userData);
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://athena-nf7s.onrender.com";
 
 const authHeaders = {
     "Authorization": `Bearer ${token}`
