@@ -2,8 +2,24 @@ import os
 import uuid
 from datetime import datetime
 
+from dotenv import load_dotenv
+from supabase import create_client
+
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+SUPABASE_BUCKET = "problem-images"
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise RuntimeError("Supabase environment variables are missing")
+
+supabase = create_client(
+    SUPABASE_URL,
+    SUPABASE_KEY
+)
+
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form
-from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -38,18 +54,22 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+def get_image_url(image_path: str):
+    return supabase.storage.from_(
+        SUPABASE_BUCKET
+    ).get_public_url(image_path)
+
 
 @app.get("/")
 def root():
     return {"message": "Athena API is running"}
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.post("/auth/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -105,6 +125,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         "user_id": new_user.id
     }
 
+
 @app.post("/auth/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
     existing_user = db.query(models.User).filter(
@@ -146,6 +167,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "role": existing_user.role
     }
 
+
 @app.get("/auth/me")
 def get_me(
     current_user: models.User = Depends(get_current_user)
@@ -157,6 +179,7 @@ def get_me(
         "category": current_user.category,
         "role": current_user.role
     }
+
 
 @app.post("/problems")
 async def create_problem(
@@ -175,26 +198,10 @@ async def create_problem(
         if image is not None
     ]
 
-    new_problem = models.Problem(
-        user_id=current_user.id,
-        title=title,
-        description=description,
-        category=current_user.category,
-        role=current_user.role,
-        status="active"
-    )
-
-    db.add(new_problem)
-    db.commit()
-    db.refresh(new_problem)
-
-    saved_images = []
+    prepared_images = []
 
     for image in images:
         if not image.content_type or not image.content_type.startswith("image/"):
-            db.delete(new_problem)
-            db.commit()
-
             raise HTTPException(
                 status_code=400,
                 detail="Only image files are allowed"
@@ -207,26 +214,73 @@ async def create_problem(
         if not extension:
             extension = ".jpg"
 
-        filename = f"{uuid.uuid4().hex}{extension}"
-        file_path = os.path.join(
-            UPLOAD_DIR,
-            filename
+        object_path = (
+            f"problems/{uuid.uuid4().hex}{extension}"
         )
 
         contents = await image.read()
 
-        with open(file_path, "wb") as file:
-            file.write(contents)
+        prepared_images.append({
+            "path": object_path,
+            "contents": contents,
+            "content_type": image.content_type
+        })
 
-        problem_image = models.ProblemImage(
-            problem_id=new_problem.id,
-            image_path=file_path
-        )
+    new_problem = models.Problem(
+        user_id=current_user.id,
+        title=title,
+        description=description,
+        category=current_user.category,
+        role=current_user.role,
+        status="active"
+    )
 
-        db.add(problem_image)
-        saved_images.append(file_path)
+    db.add(new_problem)
+    db.flush()
 
-    db.commit()
+    uploaded_paths = []
+
+    try:
+        for image in prepared_images:
+            supabase.storage.from_(
+                SUPABASE_BUCKET
+            ).upload(
+                image["path"],
+                image["contents"],
+                {
+                    "content-type": image["content_type"],
+                    "cache-control": "3600"
+                }
+            )
+
+            uploaded_paths.append(image["path"])
+
+            problem_image = models.ProblemImage(
+                problem_id=new_problem.id,
+                image_path=image["path"]
+            )
+
+            db.add(problem_image)
+
+        db.commit()
+
+    except Exception as error:
+        db.rollback()
+
+        if uploaded_paths:
+            try:
+                supabase.storage.from_(
+                    SUPABASE_BUCKET
+                ).remove(uploaded_paths)
+            except Exception:
+                pass
+
+        raise HTTPException(
+            status_code=502,
+            detail="Unable to save problem images. Please try again."
+        ) from error
+
+    db.refresh(new_problem)
 
     return {
         "message": "Problem created successfully",
@@ -235,8 +289,12 @@ async def create_problem(
         "category": new_problem.category,
         "role": new_problem.role,
         "status": new_problem.status,
-        "images": saved_images
+        "images": [
+            get_image_url(image["path"])
+            for image in prepared_images
+        ]
     }
+
 
 @app.get("/problems")
 def get_problems(db: Session = Depends(get_db)):
@@ -262,12 +320,13 @@ def get_problems(db: Session = Depends(get_db)):
                 "full_name": problem.owner.full_name
             },
             "images": [
-                f"/uploads/{os.path.basename(image.image_path)}"
+                get_image_url(image.image_path)
                 for image in problem.images
             ]
         })
 
     return result
+
 
 @app.get("/problems/role")
 def get_role_problems(
@@ -298,12 +357,13 @@ def get_role_problems(
                 "full_name": problem.owner.full_name
             },
             "images": [
-                f"/uploads/{os.path.basename(image.image_path)}"
+                get_image_url(image.image_path)
                 for image in problem.images
             ]
         })
 
     return result
+
 
 @app.get("/problems/solved")
 def get_solved_problems(db: Session = Depends(get_db)):
@@ -331,12 +391,13 @@ def get_solved_problems(db: Session = Depends(get_db)):
                 "full_name": problem.owner.full_name
             },
             "images": [
-                f"/uploads/{os.path.basename(image.image_path)}"
+                get_image_url(image.image_path)
                 for image in problem.images
             ]
         })
 
     return result
+
 
 @app.get("/problems/{problem_id}")
 def get_problem(
@@ -368,12 +429,13 @@ def get_problem(
             "full_name": problem.owner.full_name
         },
         "images": [
-            f"/uploads/{os.path.basename(image.image_path)}"
+            get_image_url(image.image_path)
             for image in problem.images
         ],
         "like_count": len(problem.likes),
         "comment_count": len(problem.comments)
     }
+
 
 @app.get("/problems/{problem_id}/comments")
 def get_comments(
@@ -408,6 +470,7 @@ def get_comments(
         }
         for comment in comments
     ]
+
 
 @app.post("/problems/{problem_id}/comments")
 def create_comment(
@@ -448,6 +511,7 @@ def create_comment(
             }
         }
     }
+
 
 @app.post("/problems/{problem_id}/like")
 def toggle_like(
@@ -493,6 +557,7 @@ def toggle_like(
         "liked": liked,
         "like_count": like_count
     }
+
 
 @app.post("/problems/{problem_id}/complete")
 def complete_problem(

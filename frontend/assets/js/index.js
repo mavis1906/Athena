@@ -86,7 +86,7 @@ function createProblemCard(problem) {
         problem.images.forEach((imagePath) => {
             const image = document.createElement("img");
 
-            image.src = `${API_URL}${imagePath}`;
+            image.src = imagePath;
             image.alt = problem.title;
 
             imageContainer.appendChild(image);
@@ -242,8 +242,7 @@ async function loadSolvedProblems() {
                 problem.images.forEach((imagePath) => {
                     const image = document.createElement("img");
 
-                    image.src =
-                        `${API_URL}${imagePath}`;
+                    image.src = imagePath;
 
                     image.alt = problem.title;
 
@@ -542,8 +541,7 @@ function renderProblemDetail(problem) {
         problem.images.forEach((imagePath) => {
             const image = document.createElement("img");
 
-            image.src =
-                `${API_URL}${imagePath}`;
+            image.src = imagePath;
 
             image.alt = problem.title;
 

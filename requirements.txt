@@ -4,3 +4,6 @@ sqlalchemy
 pwdlib[argon2]
 email-validator
 python-multipart
+python-dotenv
+psycopg[binary]
+supabase
