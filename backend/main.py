@@ -1,9 +1,12 @@
 import os
 import uuid
+import logging
 from datetime import datetime
 
 from dotenv import load_dotenv
 from supabase import create_client
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -239,6 +242,7 @@ async def create_problem(
     db.flush()
 
     uploaded_paths = []
+    failed_stage = "Supabase Storage upload"
 
     try:
         for image in prepared_images:
@@ -262,9 +266,16 @@ async def create_problem(
 
             db.add(problem_image)
 
+        failed_stage = "PostgreSQL database commit"
+
         db.commit()
 
     except Exception as error:
+        logger.exception(
+            "Problem creation failed during %s",
+            failed_stage
+        )
+
         db.rollback()
 
         if uploaded_paths:
@@ -273,7 +284,9 @@ async def create_problem(
                     SUPABASE_BUCKET
                 ).remove(uploaded_paths)
             except Exception:
-                pass
+                logger.exception(
+                    "Failed to clean up uploaded problem images"
+                )
 
         raise HTTPException(
             status_code=502,
